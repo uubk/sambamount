@@ -2,6 +2,8 @@
   - name: mount
     become: True
     command: mount "{{ sambamount_mountpoint }}"
+    tags:
+      - skip_ansible_lint
 
   - name: restart cache
     become: True
