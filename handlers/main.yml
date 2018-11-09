@@ -1,0 +1,11 @@
+---
+  - name: mount
+    become: True
+    command: mount "{{ sambamount_mountpoint }}"
+
+  - name: restart cache
+    become: True
+    service:
+      name: cachefilesd
+      state: restarted
+      enabled: yes

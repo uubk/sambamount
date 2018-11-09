@@ -1,0 +1,56 @@
+---
+  - name: Install dependencies
+    become: True
+    apt:
+      state: present
+      update_cache: yes
+      cache_valid_time: 1800
+      name:
+        - cifs-utils
+        - cachefilesd
+
+  - name: Store credentials
+    become: True
+    template:
+      src: cred.j2
+      dest: /etc/.smb.cred
+      owner: root
+      group: root
+      mode: 0600
+
+  - name: Add entry to fstab
+    become: True
+    lineinfile:
+      path: /etc/fstab
+      state: present
+      regexp: "^{{ sambamount_share }}.*"
+      line: "{{ sambamount_share }} {{ sambamount_mountpoint }} cifs  {{ sambamount_options }},credentials=/etc/.smb.cred 0 2"
+    notify: mount
+
+  - name: Ensure that the mountpoint exists
+    become: True
+    file:
+      path: "{{ sambamount_mountpoint }}"
+      state: directory
+
+  - name: Configure cachefilesd
+    become: True
+    when: sambamount_cache_enable
+    template:
+      src: cachefilesd.conf.j2
+      dest: /etc/cachefilesd.conf
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart cache
+
+  - name: Enable cachefilesd
+    become: True
+    when: sambamount_cache_enable
+    template:
+      src: cachefilesd.j2
+      dest: /etc/default/cachefilesd
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart cache

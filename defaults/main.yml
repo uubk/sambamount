@@ -1,0 +1,10 @@
+sambamount_user: ""
+sambamount_password: ""
+sambamount_share: ""
+sambamount_mountpoint: ""
+sambamount_options: "seal,cache=loose,vers=3.0,echo_interval=5,hard,fsc,uid=0,gid=33,file_mode=0660,dir_mode=0770,_netdev"
+
+sambamount_cache_enable: True
+sambamount_cache_limit_run: "25%"
+sambamount_cache_limit_cull: "23%"
+sambamount_cache_limit_stop: "20%"
