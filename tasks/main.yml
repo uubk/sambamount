@@ -7,6 +7,15 @@
       cache_valid_time: 1800
       name:
         - cifs-utils
+
+  - name: Install cachefilesd
+    become: True
+    when: sambamount_cache_enable
+    apt:
+      state: present
+      update_cache: yes
+      cache_valid_time: 1800
+      name:
         - cachefilesd
 
   - name: Store credentials
